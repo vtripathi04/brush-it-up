@@ -3,6 +3,6 @@ import { generateQuizFromText } from '../controllers/quizController.js';
 
 const router = express.Router();
 
-router.post('/generate', generateQuizFromText);
+router.post('/generate_quiz', generateQuizFromText);
 
 export default router;
