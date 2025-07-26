@@ -7,6 +7,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 export const generateQuizFromText = async (req, res, next) => {
   try {
+    // console.log(req.body);
     const { text } = req.body.data;
     
     console.log( text.substr(0, 100) );

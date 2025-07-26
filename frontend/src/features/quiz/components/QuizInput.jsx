@@ -156,7 +156,7 @@ export function QuizInput() {
         <TabPanel value={selectedTab} index={0}>
           <Stack spacing={3} alignItems="center" sx={{ textAlign: 'center', minHeight: '20vh', justifyContent: 'center' }}>
 
-            {/* NEW: Conditional rendering based on whether a file is selected */}
+            {/* Conditional rendering based on whether a file is selected */}
             {!selectedFile ? (
               // If NO file is selected, show the upload prompt
               <>
