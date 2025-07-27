@@ -8,7 +8,7 @@ import {
   FormControlLabel,
   FormControl,
   TextField,
-  Grid // Import the Grid component
+  Grid
 } from '@mui/material';
 
 /**
@@ -18,15 +18,14 @@ import {
  * @param {object} props
  * @param {number} props.questionNumber
  * @param {string} props.questionText
- * @param {'mcq' | 'short_answer'} props.questionType
+ * @param {'mcqs' | 'oneWord'} props.questionType
  * @param {string[]} [props.options=[]]
  */
-export function QuestionCard({ questionNumber, questionText, questionType, options = [] }) {
-  const [selectedValue, setSelectedValue] = useState('');
+export function QuestionCard({ questionNumber, questionText, questionType, options = [], value, onAnswerChange }) {
 
   const handleSelectionChange = (event) => {
-    setSelectedValue(event.target.value);
-  };
+    onAnswerChange(event.target.value);
+  }
 
   return (
     // Use a flatter, outlined Paper variant for a modern look
@@ -68,12 +67,12 @@ export function QuestionCard({ questionNumber, questionText, questionType, optio
 
       {/* Answer Area */}
       <Box sx={{ pl: { xs: 0, sm: '56px' } }}> {/* Indent to align with question text */}
-        {questionType === 'mcq' && (
+        {questionType === 'mcqs' && (
           <FormControl component="fieldset" fullWidth>
             <RadioGroup
               aria-label={`question-${questionNumber}`}
               name={`question-${questionNumber}`}
-              value={selectedValue}
+              value={value || ""}
               onChange={handleSelectionChange}
             >
               {/* Use Grid container for the 2x2 layout */}
@@ -91,9 +90,9 @@ export function QuestionCard({ questionNumber, questionText, questionType, optio
                         cursor: 'pointer',
                         transition: 'border-color 0.3s, background-color 0.3s',
                         // Highlight the selected option
-                        borderColor: selectedValue === option ? 'primary.main' : 'divider',
-                        borderWidth: selectedValue === option ? 2 : 1,
-                        backgroundColor: selectedValue === option ? 'action.hover' : 'transparent',
+                        borderColor: value === option ? 'primary.main' : 'divider',
+                        borderWidth: value === option ? 2 : 1,
+                        backgroundColor: value === option ? 'action.hover' : 'transparent',
                         '&:hover': {
                            borderColor: 'primary.light',
                            backgroundColor: 'action.hover'
@@ -114,14 +113,14 @@ export function QuestionCard({ questionNumber, questionText, questionType, optio
           </FormControl>
         )}
 
-        {questionType === 'short_answer' && (
+        {questionType === 'oneWord' && (
           <TextField
             fullWidth
             multiline
             rows={4}
             variant="outlined"
             label="Your Answer"
-            value={selectedValue}
+            value={value || ""}
             onChange={handleSelectionChange}
           />
         )}

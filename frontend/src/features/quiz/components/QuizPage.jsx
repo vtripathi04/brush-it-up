@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 import { QuestionCard } from "./QuestionCard";
-import { Box, Typography, Button, Container, CircularProgress, Alert } from '@mui/material';
+import { Box, Typography, Button, Container, CircularProgress, Alert, Experimental_CssVarsProvider } from '@mui/material';
 
 export function QuizPage() {
     const location = useLocation();
@@ -10,6 +10,7 @@ export function QuizPage() {
 
     const [questions, setQuestions] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [userAnswers, setUserAnswers] = useState(null);
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -31,7 +32,22 @@ export function QuizPage() {
 
                 // check if the expected data structure exists
                 if (response.data && response.data.data) {
+
                     setQuestions(response.data.data);
+
+                    // set user answers for mcqs and one word answers as empty arrays of respective sizes
+                    // console.log(response.data.data.mcqs);
+                    // console.log( "MCQ size: ", response.data.data.mcqs.length );
+                    // console.log( "One Word size: ", response.data.data.oneWord.length );
+                    
+                    setUserAnswers(
+                    { 
+                        mcqs: new Array( response.data.data.mcqs.length ).fill(""),
+                        oneWord: new Array( response.data.data.oneWord.length ).fill(""),
+                    } );
+
+                    console.log(userAnswers);
+
                 } else {
                     throw new Error("Received an unexpected data format from the server.");
                 }
@@ -47,6 +63,23 @@ export function QuizPage() {
         fetchQuestions();
 
     }, [quizText]);
+
+
+    const handleAnswerChange = ( qType, index, answer ) => {
+        
+        setUserAnswers( prevUserAnswers => {
+
+            const newUserAnswers = {...prevUserAnswers};
+            newUserAnswers[qType][index] = answer;
+            return newUserAnswers;
+
+        } );
+
+        console.log(userAnswers);
+        
+       
+    }
+
 
 
     // render a loading spinner while fetching data
@@ -82,8 +115,10 @@ export function QuizPage() {
                         key={`mcq-${index}`}
                         questionNumber={index + 1}
                         questionText={mcq.question}
-                        questionType="mcq"
+                        questionType="mcqs"
                         options={mcq.options}
+                        value={ userAnswers["mcqs"][index] }
+                        onAnswerChange = {(answer) => handleAnswerChange( "mcqs", index, answer ) }
                     />
                 ))}
 
@@ -94,8 +129,11 @@ export function QuizPage() {
                         // continue the numbering from where the MCQs left off
                         questionNumber={(questions?.mcqs?.length || 0) + index + 1}
                         questionText={shortAnswer.question}
-                        questionType="short_answer"
+                        questionType="oneWord"
                         // no need to pass options, the component handles it
+                        value={ userAnswers["oneWord"][index] }
+                        onAnswerChange = {(answer) => handleAnswerChange( "oneWord", index, answer ) }
+                        
                     />
                 ))}
 
