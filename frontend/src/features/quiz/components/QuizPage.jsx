@@ -3,9 +3,11 @@ import axios from "axios";
 import { useLocation } from "react-router-dom";
 import { QuestionCard } from "./QuestionCard";
 import { Box, Typography, Button, Container, CircularProgress, Alert, Experimental_CssVarsProvider } from '@mui/material';
+import { useNavigate } from "react-router-dom";
 
 export function QuizPage() {
     const location = useLocation();
+    const navigate = useNavigate();
     const quizText = location.state?.quizText;
 
     const [questions, setQuestions] = useState(null);
@@ -81,6 +83,10 @@ export function QuizPage() {
     }
 
 
+    const handleQuizSubmit = () => {
+        navigate('/quizResult', { state: { questions: questions, userAnswers: userAnswers } });
+    }
+
 
     // render a loading spinner while fetching data
     if (isLoading) {
@@ -138,7 +144,7 @@ export function QuizPage() {
                 ))}
 
                 <Box textAlign="center" mt={5}>
-                    <Button variant="contained" size="large">
+                    <Button variant="contained" size="large" onClick={handleQuizSubmit}>
                         Submit Quiz
                     </Button>
                 </Box>

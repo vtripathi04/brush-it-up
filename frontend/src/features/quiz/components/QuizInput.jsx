@@ -8,7 +8,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from 'react-router-dom';
 import { QuizPage } from './QuizPage';
 
-// A helper component to manage the content of each tab
+// helper component to manage the content of each tab
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -29,7 +29,6 @@ function TabPanel(props) {
   );
 }
 
-// renamed the component to follow standard naming conventions (PascalCase)
 export function QuizInput() {
 
   const navigate = useNavigate();
@@ -62,7 +61,7 @@ export function QuizInput() {
     setSelectedFile(null);
   };
 
-  // function to 
+  // function to get the quiz text from backend
   const getQuizText = async () => {
 
     let endpoint = "";
